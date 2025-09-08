@@ -49,4 +49,13 @@ public class ProdutoResource {
         return Response.status(Response.Status.OK).build();
     }
 
+    @DELETE
+    @Path("/{id}")
+    @Transactional
+
+    public Response deleteProduto(@PathParam("id") long id){
+        produtoService.delete(id);
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
 }
