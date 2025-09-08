@@ -34,5 +34,8 @@ public class ProdutoService {
     }
 
 
-
+    public void update(long id, ProdutoDto produtoDto) {
+        Produto produto = produtoRepository.findById(id);
+        ProdutoMapper.updateProduto(produto, produtoDto);
+    }
 }
