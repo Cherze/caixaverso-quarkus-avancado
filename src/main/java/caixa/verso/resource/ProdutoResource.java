@@ -30,7 +30,7 @@ public class ProdutoResource {
     }
 
     @GET
-    public Response getProduto() {
+    public Response getProduto(){
         List<ProdutoDto> produtos = produtoService.getAll();
         return Response.status(Response.Status.OK).entity(produtos).build();
     }
@@ -38,21 +38,21 @@ public class ProdutoResource {
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") long id){
-        return Response.status(Response.Status.OK).entity(produtoService.getById(id)).build();
+        ProdutoDto produto = produtoService.getById(id);
+        return Response.status(Response.Status.OK).entity(produto).build();
     }
 
     @PUT
     @Path("/{id}")
     @Transactional
     public Response updateProduto(@PathParam("id") long id, ProdutoDto produtoDto){
-        produtoService.update(id,produtoDto);
-        return Response.status(Response.Status.OK).build();
+        Produto produtoAtualizado = produtoService.update(id,produtoDto);
+        return Response.status(Response.Status.OK).entity(produtoAtualizado).build();
     }
 
     @DELETE
     @Path("/{id}")
     @Transactional
-
     public Response deleteProduto(@PathParam("id") long id){
         produtoService.delete(id);
         return Response.status(Response.Status.NO_CONTENT).build();

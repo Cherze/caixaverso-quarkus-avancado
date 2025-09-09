@@ -2,6 +2,7 @@ package caixa.verso.service;
 
 import caixa.verso.dto.ProdutoDto;
 import caixa.verso.dto.mapper.ProdutoMapper;
+import caixa.verso.exception.ValidacaoProdutoException;
 import caixa.verso.exception.ProdutoNaoEncontradoException;
 import caixa.verso.model.Produto;
 import caixa.verso.repository.ProdutoRepository;
@@ -24,6 +25,7 @@ public class ProdutoService {
     }
 
     public Produto create(ProdutoDto produtoDto){
+        this.validaProdutoDto(produtoDto);
         Produto produto = ProdutoMapper.toEntity(produtoDto);
         produtoRepository.persist(produto);
         return produto;
@@ -31,27 +33,37 @@ public class ProdutoService {
 
     public ProdutoDto getById(long id) {
         Produto produto = produtoRepository.findById(id);
-        if(produto==null){
-            throw new ProdutoNaoEncontradoException("Produto não encontrado!");
-        }
+        this.isNull(produto);
         return ProdutoMapper.toDto(produto);
     }
 
 
-    public void update(long id, ProdutoDto produtoDto) {
+    public Produto update(long id, ProdutoDto produtoDto) {
+        this.validaProdutoDto(produtoDto);
         Produto produto = produtoRepository.findById(id);
-
-        if (produto==null){
-            throw new ProdutoNaoEncontradoException("Produto não encontrado!");
-        }
-        ProdutoMapper.updateProduto(produto, produtoDto);
+        this.isNull(produto);
+        return ProdutoMapper.updateProduto(produto, produtoDto);
     }
 
     public void delete(long id) {
 
-        if (produtoRepository.findById(id)==null){
-            throw new ProdutoNaoEncontradoException("Produto não encontrado!");
+        if(!produtoRepository.deleteById(id)){
+            throw new ProdutoNaoEncontradoException("Produto não encontrado.");
         }
-        produtoRepository.deleteById(id);
     }
+
+    public void validaProdutoDto(ProdutoDto produtoDto){
+        if (produtoDto.getPreco()<=0){
+            throw new ValidacaoProdutoException("Preço precisa ser maior que zero.");
+        } else if (produtoDto.getNome()==null || produtoDto.getNome().isBlank()) {
+            throw new ValidacaoProdutoException("Nome não pode ser vazio.");
+        }
+    }
+
+    public void isNull(Produto produto){
+        if (produto==null){
+            throw new ProdutoNaoEncontradoException("Produto não encontrado.");
+        }
+    }
+
 }
