@@ -5,8 +5,7 @@ import io.quarkus.oidc.UserInfo;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.jwt.Claim;
-import org.eclipse.microprofile.jwt.Claims;
+
 import org.eclipse.microprofile.jwt.JsonWebToken;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ public class TokenService {
     JsonWebToken accessToken;  // Para autorização
 
     @Inject
-    //@Claim(standard = Claims.upn)
     UserInfo userInfo;
 
     @Inject
@@ -54,11 +52,11 @@ public class TokenService {
     }
 
     public boolean canReadProdutos() {
-        return hasRole("agencia-read") || hasRole("admin");
+        return hasRole("user") || hasRole("admin");
     }
 
     public boolean canWriteProdutos() {
-        return hasRole("agencia-write") || hasRole("admin");
+        return hasRole("admin");
     }
 
     // Validação de scopes do Access Token

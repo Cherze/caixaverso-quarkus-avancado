@@ -22,13 +22,6 @@ import java.util.List;
 
 public class ProdutoResource {
 
-    @Inject
-    TokenService tokenService;
-
-    @Inject
-    JsonWebToken accessToken;
-
-
     public final ProdutoService produtoService;
 
     public ProdutoResource(ProdutoService produtoService) {
@@ -39,36 +32,25 @@ public class ProdutoResource {
     @Transactional
     @RolesAllowed({"admin"})
     public Response addProduto(ProdutoDto produtoDto){
-        if(!tokenService.canWriteProdutos()) {
-            return Response.status(Response.Status.FORBIDDEN)
-                    .entity("Sem permissão para escrever produtos")
-                    .build();
-        }else{
-            Produto produto = produtoService.create(produtoDto);
-            return Response.status(Response.Status.CREATED).entity(produto).build();
-        }
+        Produto produto = produtoService.create(produtoDto);
+        return Response.status(Response.Status.CREATED).entity(produto).build();
     }
 
     @GET
-    @RolesAllowed({"admin", "user"})
+    @RolesAllowed({"user"})
     public Response getProduto(){
-        if (!tokenService.canReadProdutos()) {
-            return Response.status(Response.Status.FORBIDDEN)
-                    .entity("Sem permissão para ler produtos")
-                    .build();
-        }else{
-            List<ProdutoDto> produtos = produtoService.getAll();
-            return Response.status(Response.Status.OK).entity(produtos).build();
-        }
+        List<ProdutoDto> produtos = produtoService.getAll();
+        return Response.status(Response.Status.OK).entity(produtos).build();
 
     }
 
     @GET
     @Path("/{id}")
-    @RolesAllowed({"admin", "user"})
+    @RolesAllowed({"user"})
     public Response getById(@PathParam("id") long id){
         ProdutoDto produto = produtoService.getById(id);
         return Response.status(Response.Status.OK).entity(produto).build();
+
     }
 
     @PUT
@@ -78,6 +60,7 @@ public class ProdutoResource {
     public Response updateProduto(@PathParam("id") long id, ProdutoDto produtoDto){
         Produto produtoAtualizado = produtoService.update(id,produtoDto);
         return Response.status(Response.Status.OK).entity(produtoAtualizado).build();
+
     }
 
     @DELETE
@@ -85,8 +68,9 @@ public class ProdutoResource {
     @Transactional
     @RolesAllowed({"admin"})
     public Response deleteProduto(@PathParam("id") long id){
-        produtoService.delete(id);
-        return Response.status(Response.Status.NO_CONTENT).build();
+         produtoService.delete(id);
+         return Response.status(Response.Status.NO_CONTENT).build();
+
     }
 
 }
