@@ -1,9 +1,12 @@
 package caixa.verso.resource;
 
+//import caixa.verso.cache.KeyGenerator;
 import caixa.verso.dto.ProdutoDto;
 import caixa.verso.model.Produto;
 import caixa.verso.service.ProdutoService;
 import caixa.verso.service.TokenService;
+import io.quarkus.cache.CacheInvalidateAll;
+import io.quarkus.cache.CacheResult;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.RequestScoped;
 import jakarta.inject.Inject;
@@ -31,6 +34,7 @@ public class ProdutoResource {
     @POST
     @Transactional
     @RolesAllowed({"admin"})
+    @CacheInvalidateAll(cacheName = "cache-produto")
     public Response addProduto(ProdutoDto produtoDto){
         Produto produto = produtoService.create(produtoDto);
         return Response.status(Response.Status.CREATED).entity(produto).build();
@@ -47,6 +51,7 @@ public class ProdutoResource {
     @GET
     @Path("/{id}")
     @RolesAllowed({"user"})
+    //@CacheResult(cacheName = "cache-produto")
     public Response getById(@PathParam("id") long id){
         ProdutoDto produto = produtoService.getById(id);
         return Response.status(Response.Status.OK).entity(produto).build();
@@ -57,6 +62,7 @@ public class ProdutoResource {
     @Path("/{id}")
     @Transactional
     @RolesAllowed({"admin"})
+    @CacheInvalidateAll(cacheName = "cache-produto")
     public Response updateProduto(@PathParam("id") long id, ProdutoDto produtoDto){
         Produto produtoAtualizado = produtoService.update(id,produtoDto);
         return Response.status(Response.Status.OK).entity(produtoAtualizado).build();
@@ -67,6 +73,7 @@ public class ProdutoResource {
     @Path("/{id}")
     @Transactional
     @RolesAllowed({"admin"})
+    @CacheInvalidateAll(cacheName = "cache-produto")
     public Response deleteProduto(@PathParam("id") long id){
          produtoService.delete(id);
          return Response.status(Response.Status.NO_CONTENT).build();

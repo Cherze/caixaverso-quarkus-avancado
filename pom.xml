@@ -90,6 +90,18 @@
             <artifactId>quarkus-keycloak-admin-rest-client</artifactId>
         </dependency>
 
+        <!--Cache-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-redis-cache</artifactId>
+        </dependency>
+
+        <!--LOG-->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-logging-json</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

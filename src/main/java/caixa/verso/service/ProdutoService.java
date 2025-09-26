@@ -6,13 +6,20 @@ import caixa.verso.exception.ValidacaoProdutoException;
 import caixa.verso.exception.ProdutoNaoEncontradoException;
 import caixa.verso.model.Produto;
 import caixa.verso.repository.ProdutoRepository;
+import io.quarkus.cache.Cache;
+import io.quarkus.cache.CacheResult;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 
 import java.util.List;
 
 @ApplicationScoped
 
 public class ProdutoService {
+
+    //@Inject
+    //Cache cache;
 
     public final ProdutoRepository produtoRepository;
 
@@ -31,7 +38,9 @@ public class ProdutoService {
         return produto;
     }
 
+    @CacheResult(cacheName = "cache-produto")
     public ProdutoDto getById(long id) {
+        Log.info("Buscando do BANCO.");
         Produto produto = produtoRepository.findById(id);
         this.isNull(produto);
         return ProdutoMapper.toDto(produto);
