@@ -1,62 +1,41 @@
-# code-with-quarkus
+# Produto-API
 
-This project uses Quarkus, the Supersonic Subatomic Java Framework.
+CHERZE CARVALHO FREITAS
 
-If you want to learn more about Quarkus, please visit its website: <https://quarkus.io/>.
+Fabio Monteiro Crispim
 
-## Running the application in dev mode
+Marcos Guilherme Grandi
 
-You can run your application in dev mode that enables live coding using:
+Raphael dos Santos Pinto
 
+## Aplicação
+
+Você pode executar com o script Wrapper maven ou Quarkus CLI
+.
 ```shell script
 ./mvnw quarkus:dev
+ quarkus dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at <http://localhost:8080/q/dev/>.
+> **_NOTE:_**  Utilizar Insomnia ou Postman na URL <http://localhost:8080/produtos/>.
 
-## Packaging and running the application
+## Características
 
-The application can be packaged using:
-
+CRUD REST completo para cadastro, pesquisa, listagem, alteração e exclusão de produtos no seguinte formato JSON:
 ```shell script
-./mvnw package
+{
+  "nome":"produto1",
+  "descricao":"descricao1"
+  "preco":100
+}
 ```
 
-It produces the `quarkus-run.jar` file in the `target/quarkus-app/` directory.
-Be aware that it’s not an _über-jar_ as the dependencies are copied into the `target/quarkus-app/lib/` directory.
+Acesso OIDC com Keycloak:
+    -> Usuário com role admin (padrão alice e senha alice)
+    -> Usuário com role user (padrão bob e senha bob)
 
-The application is now runnable using `java -jar target/quarkus-app/quarkus-run.jar`.
+Busca de produto por ID em cache.
 
-If you want to build an _über-jar_, execute the following command:
+Mensageria com KAFKA ao cadastrar um produto no banco. Printa no terminal um log contendo :
 
-```shell script
-./mvnw package -Dquarkus.package.jar.type=uber-jar
-```
-
-The application, packaged as an _über-jar_, is now runnable using `java -jar target/*-runner.jar`.
-
-## Creating a native executable
-
-You can create a native executable using:
-
-```shell script
-./mvnw package -Dnative
-```
-
-Or, if you don't have GraalVM installed, you can run the native executable build in a container using:
-
-```shell script
-./mvnw package -Dnative -Dquarkus.native.container-build=true
-```
-
-You can then execute your native executable with: `./target/code-with-quarkus-1.0.0-SNAPSHOT-runner`
-
-If you want to learn more about building native executables, please consult <https://quarkus.io/guides/maven-tooling>.
-
-## Provided Code
-
-### REST
-
-Easily start your REST Web Services
-
-[Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+"Produto cadastrado com sucesso: {id, nome, descricao, preco, e instante de criação}"

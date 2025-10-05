@@ -4,13 +4,13 @@ import caixa.verso.dto.ProdutoDto;
 import caixa.verso.dto.mapper.ProdutoMapper;
 import caixa.verso.exception.ValidacaoProdutoException;
 import caixa.verso.exception.ProdutoNaoEncontradoException;
+import caixa.verso.messaging.KafkaMensageria;
 import caixa.verso.model.Produto;
 import caixa.verso.repository.ProdutoRepository;
 import io.quarkus.cache.Cache;
 import io.quarkus.cache.CacheResult;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 import java.util.List;
 
@@ -21,9 +21,12 @@ public class ProdutoService {
     //@Inject
     //Cache cache;
 
+    final KafkaMensageria kafkaMsg;
+
     public final ProdutoRepository produtoRepository;
 
-    public ProdutoService(ProdutoRepository produtoRepository) {
+    public ProdutoService(KafkaMensageria kafkaMsg, ProdutoRepository produtoRepository) {
+        this.kafkaMsg = kafkaMsg;
         this.produtoRepository = produtoRepository;
     }
 
@@ -35,6 +38,7 @@ public class ProdutoService {
         this.validaProdutoDto(produtoDto);
         Produto produto = ProdutoMapper.toEntity(produtoDto);
         produtoRepository.persist(produto);
+        kafkaMsg.enviaMsg(produto);
         return produto;
     }
 
